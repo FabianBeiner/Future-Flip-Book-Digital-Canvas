@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Der digitale Future Flip-Book Canvas</title>
+  <meta content="Future Flip-Book - Sechs Fragen an Ihre Innovation" name="description">
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+  <style>
+    /* CSS Custom Properties */
+    :root {
+      /* Colors */
+      --primary-bg: #FFF100;
+      --text-color: #231F20;
+      --placeholder-color: #939598;
+      --white: #FFF;
+      --black: #000;
+
+      /* Spacing */
+      --spacing-xs: 0.2rem;
+      --spacing-sm: 0.5rem;
+      --spacing-md: 1rem;
+      --spacing-lg: 1.5rem;
+      --spacing-xl: 2rem;
+      --spacing-xxl: 4rem;
+
+      /* Border Radius */
+      --radius-sm: 0.125rem; /* 2px */
+      --radius-md: 0.3125rem; /* 5px */
+      --radius-lg: 0.5rem; /* 8px */
+      --radius-xl: 0.625rem; /* 10px */
+
+      /* Font Sizes */
+      --text-xs: 0.875rem; /* 14px */
+      --text-sm: 1rem; /* 16px */
+      --text-md: 1.1rem; /* ~18px */
+      --text-lg: 1.5rem; /* 24px */
+      --text-xl: 4rem; /* 64px */
+
+      /* Layout */
+      --container-max: 112.5rem; /* 1800px */
+      --textarea-min-height: 12.5rem; /* 200px */
+      --help-icon-size: 1.25rem; /* 20px */
+      --tooltip-width: 15.625rem; /* 250px */
+      --code-input-width: 9.375rem; /* 150px */
+    }
+
+    /* Reset */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Base Styles */
+    body {
+      font-family: "Work Sans", system-ui, -apple-system, sans-serif;
+      font-size: var(--text-sm);
+      line-height: 1.5;
+      min-height: 100vh;
+      padding: var(--spacing-xl) var(--spacing-xxl);
+      color: var(--text-color);
+      background-color: var(--primary-bg);
+    }
+
+    /* Layout */
+    .container {
+      max-width: var(--container-max);
+      margin: 0 auto;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-areas:
+    "left1  right1"
+    "left2  right2"
+    "left3  right3"
+    "full   full";
+      gap: var(--spacing-xxl);
+    }
+
+    /* Grid Areas */
+    .left1 {
+      grid-area: left1;
+    }
+
+    .left2 {
+      grid-area: left2;
+    }
+
+    .left3 {
+      grid-area: left3;
+    }
+
+    .right1 {
+      grid-area: right1;
+    }
+
+    .right2 {
+      grid-area: right2;
+    }
+
+    .right3 {
+      grid-area: right3;
+    }
+
+    .full-width {
+      grid-area: full;
+    }
+
+    header {
+      margin-bottom: 4rem;
+      text-align: center;
+    }
+
+    footer {
+      margin-top: 4rem;
+      text-align: center;
+    }
+
+    /* Typography */
+    h1 {
+      font-size: var(--text-xl);
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      font-size: var(--text-lg);
+      font-weight: 600;
+      display: inline-block;
+      padding: calc(var(--spacing-sm) / 2) var(--spacing-md);
+      text-transform: uppercase;
+      color: var(--primary-bg);
+      border-radius: var(--radius-xl);
+      background: var(--text-color);
+    }
+
+    h3 {
+      font-size: var(--text-md);
+      font-weight: 700;
+      margin-bottom: var(--spacing-md);
+      text-transform: uppercase;
+    }
+
+    /* Sections */
+    .section-content {
+      padding: var(--spacing-lg);
+      border-radius: var(--radius-xl);
+      background: var(--white);
+    }
+
+    .section-label {
+      font-weight: 600;
+      display: inline-block;
+      margin-right: var(--spacing-md);
+      padding: 0 0.4rem;
+      color: var(--primary-bg);
+      border-radius: var(--radius-md);
+      background: var(--text-color);
+    }
+
+    /* Form Elements */
+    .textarea-wrapper {
+      position: relative;
+    }
+
+    textarea {
+      font-family: inherit;
+      font-size: var(--text-md);
+      line-height: 1.5;
+      width: 100%;
+      min-height: var(--textarea-min-height);
+      padding: 0 var(--spacing-xl) 0 0;
+      resize: none;
+      transition: background-color 0.2s ease;
+      color: var(--text-color);
+      border: none;
+      background: var(--white);
+    }
+
+    textarea:focus {
+      outline: none;
+    }
+
+    textarea::placeholder,
+    legend {
+      font-size: var(--text-sm);
+      color: var(--placeholder-color);
+    }
+
+    /* Help System */
+    .help-icon {
+      position: absolute;
+      top: var(--spacing-xs);
+      right: var(--spacing-xs);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--help-icon-size);
+      height: var(--help-icon-size);
+      cursor: help;
+      transition: opacity 0.3s ease;
+      opacity: 0;
+      color: var(--white);
+      border: none;
+      border-radius: 50%;
+      background: var(--text-color);
+    }
+
+    .textarea-wrapper:focus-within .help-icon {
+      opacity: 1;
+    }
+
+    .help-tooltip {
+      font-size: var(--text-xs);
+      position: absolute;
+      z-index: 10;
+      top: calc(var(--radius-xl) * -1);
+      right: 1.875rem;
+      display: none;
+      width: var(--tooltip-width);
+      padding: var(--spacing-sm);
+      color: var(--white);
+      border-radius: var(--radius-sm);
+      background: var(--text-color);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .help-tooltip li {
+      line-height: 1.1;
+      margin-bottom: var(--spacing-xs);
+      margin-left: var(--spacing-md);
+      list-style-type: disc;
+    }
+
+    .help-tooltip li:last-child {
+      margin-bottom: 0;
+    }
+
+    .help-icon:hover + .help-tooltip,
+    .help-icon:focus + .help-tooltip {
+      display: block;
+    }
+
+    /* Code Input */
+    .code-input {
+      font-family: inherit;
+      width: var(--code-input-width);
+      margin-top: var(--spacing-md);
+      padding: var(--spacing-sm);
+      letter-spacing: 0.5em;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: var(--white);
+    }
+
+    .code-input::placeholder {
+      text-align: center;
+    }
+
+    /* SDG Section */
+    .sdgs-container {
+      padding: var(--spacing-lg);
+      border-radius: var(--radius-lg);
+      background: var(--white);
+    }
+
+    .sdgs {
+      display: grid;
+      padding: var(--spacing-lg);
+      border-radius: var(--radius-lg);
+      background: var(--white);
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--spacing-md);
+    }
+
+    .sdg-item {
+      display: flex;
+      align-items: flex-start;
+      padding: var(--spacing-sm);
+      gap: var(--spacing-sm);
+    }
+
+    /* Custom Checkbox */
+    .sdg-item input[type="checkbox"] {
+      width: var(--spacing-md);
+      height: var(--spacing-md);
+      margin-top: calc(var(--spacing-sm) / 2);
+      cursor: pointer;
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+      border: var(--radius-sm) solid var(--primary-bg);
+      border-radius: var(--radius-sm);
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .sdg-item input[type="checkbox"]:checked {
+      border-color: var(--text-color);
+      background-color: var(--text-color);
+    }
+
+    .sdg-item input[type="checkbox"]:focus {
+      outline: 2px solid var(--text-color);
+      outline-offset: 2px;
+    }
+
+    .sdg-item label {
+      flex: 1;
+      cursor: pointer;
+    }
+
+    fieldset {
+      border: none;
+    }
+
+    /* Footer Elements */
+    .website-link {
+      font-size: var(--text-lg);
+      font-weight: bold;
+      display: inline-block;
+      transition: text-decoration-color 0.3s ease;
+      text-decoration: none;
+      text-transform: uppercase;
+      color: var(--text-color);
+    }
+
+    .website-link:hover,
+    .website-link:focus {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+    }
+
+    .styled-button {
+      font-family: inherit;
+      font-weight: 600;
+      margin-top: var(--spacing-md);
+      padding: calc(var(--spacing-lg) / 2) var(--spacing-lg);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius-md);
+      background: var(--text-color);
+    }
+
+    .styled-button:hover,
+    .styled-button:focus {
+      transform: translateY(-1px);
+      color: var(--primary-bg);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .styled-button + .styled-button {
+      margin-left: var(--spacing-md);
+    }
+
+    .copyright {
+      font-size: var(--text-xs);
+      position: fixed;
+      right: var(--spacing-md);
+      bottom: var(--spacing-md);
+      writing-mode: vertical-rl;
+    }
+
+    .copyright a {
+      transition: text-decoration-color 0.3s ease;
+      text-decoration: none;
+      color: var(--text-color);
+    }
+
+    .copyright a:hover,
+    .copyright a:focus {
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+    }
+
+    .digital-copyright {
+      font-size: 0.75rem;
+      margin-top: var(--spacing-lg);
+      opacity: 0.8;
+      color: var(--text-color);
+    }
+
+    .digital-copyright a {
+      text-decoration: none;
+      color: var(--text-color);
+    }
+
+    .digital-copyright a:hover {
+      text-decoration: underline;
+    }
+
+    .for-print {
+      display: none;
+    }
+
+    /* Print Styles */
+    @media print {
+      @page {
+        size: A4 landscape;
+        margin: 15mm;
+        orphans: 0;
+        widows: 0;
+      }
+
+      .container {
+        max-width: none;
+        margin: 0;
+      }
+
+      body {
+        min-height: 0; /* Remove minimum height */
+        padding: 0;
+        background: var(--white);
+      }
+
+      * {
+        color: var(--black) !important;
+      }
+
+      .grid {
+        display: grid;
+        gap: 10mm;
+      }
+
+      h1 {
+        font-size: var(--text-lg);
+      }
+
+      h2 {
+        font-size: var(--text-sm);
+      }
+
+      /* Hide Elements */
+      textarea::placeholder,
+      .styled-button,
+      legend,
+      .website-link,
+      .help-icon,
+      .help-tooltip,
+      .section-label {
+        display: none;
+      }
+
+      .copyright {
+        position: static;
+        margin-top: var(--spacing-md);
+        text-align: center;
+        writing-mode: horizontal-tb;
+      }
+
+      /* Show/Hide SDG Items */
+      .sdg-item:not(:has(input:checked)),
+      .sdg-item input[type="checkbox"]:checked {
+        display: none;
+      }
+
+      /* Hide Empty Elements */
+      textarea:empty {
+        display: none;
+      }
+
+      /* Show Print Elements */
+      .for-print {
+        display: block;
+      }
+    }
+
+    /* Accessibility Improvements */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+
+    /* High Contrast Mode */
+    @media (forced-colors: active) {
+      .help-icon,
+      .styled-button {
+        border: 1px solid currentColor;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header class="main-header">
+    <h1>Future Flip-Book</h1>
+    <h2>Sechs Fragen an Ihre Innovation</h2>
+    <form class="code-form">
+      <label for="inspiration-code">Diese Inspiration hat den Code</label>
+      <input
+          aria-label="Inspirations-Code eingeben"
+          class="code-input"
+          id="inspiration-code"
+          maxlength="8"
+          pattern="\d{2}-\d{2}-\d{2}"
+          placeholder="__-__-__"
+          type="text">
+    </form>
+  </header>
+
+  <main class="grid">
+    <section class="section left1">
+      <h3><span aria-hidden="true" class="section-label">Start</span> Die Inspiration</h3>
+      <div class="section-content">
+        <div class="textarea-wrapper">
+            <textarea
+                aria-label="Inspiration eingeben"
+                id="inspiration"
+                placeholder="Notieren Sie hier die Inspiration aus dem Future Flip-Book."></textarea>
+          <div aria-hidden="true" class="for-print" id="from-inspiration"></div>
+          <button aria-expanded="false" aria-label="Hilfe zur Inspiration" class="help-icon" type="button">?</button>
+          <div class="help-tooltip" role="tooltip">
+            <ul>
+              <li>Notieren Sie hier die Inspiration aus dem Future Flip-Book.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section left2">
+      <h3><span aria-hidden="true" class="section-label">1.</span> Was ist das?</h3>
+      <div class="section-content">
+        <div class="textarea-wrapper">
+            <textarea
+                aria-label="Was ist das?"
+                id="whatIsIt"
+                placeholder="Was ist das?
+Wie könnte eine Innovation aussehen, die durch die Inspiration beschrieben wird?
+Was macht diese Innovation?
+Was wird mit dieser Innovation erreicht?"></textarea>
+          <div aria-hidden="true" class="for-print" id="from-whatIsIt"></div>
+          <button aria-expanded="false" aria-label="Hilfe zu Was ist das?" class="help-icon" type="button">?</button>
+          <div class="help-tooltip" role="tooltip">
+            <ul>
+              <li>Was ist das?</li>
+              <li>Wie könnte eine Innovation aussehen, die durch die Inspiration beschrieben wird?</li>
+              <li>Was macht diese Innovation?</li>
+              <li>Was wird mit dieser Innovation erreicht?</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section left3">
+      <h3><span aria-hidden="true" class="section-label">2.</span> Welches Problem löst die Innovation?</h3>
+      <div class="section-content">
+        <div class="textarea-wrapper">
+            <textarea
+                aria-label="Welches Problem löst die Innovation?"
+                id="problem"
+                placeholder="Beschreiben Sie das Problem, das die Innovation für aktuelle oder für Kund:innen und Klient:innen der Zukunft löst.
+Können Sie eine Vision entwerfen?
+Wie wird die Welt aussehen, wenn Sie Ihre Idee verwirklichen?"></textarea>
+          <div aria-hidden="true" class="for-print" id="from-problem"></div>
+          <button aria-expanded="false" aria-label="Hilfe zum Problem" class="help-icon" type="button">?</button>
+          <div class="help-tooltip" role="tooltip">
+            <ul>
+              <li>Beschreiben Sie das Problem, das die Innovation für aktuelle oder für Kund:innen und Klient:innen der
+                Zukunft löst.
+              </li>
+              <li>Können Sie eine Vision entwerfen?</li>
+              <li>Wie wird die Welt aussehen, wenn Sie Ihre Idee verwirklichen?</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section right1">
+      <h3><span aria-hidden="true" class="section-label">3.</span> Wer sind die Kund:innen?</h3>
+      <div class="section-content">
+        <div class="textarea-wrapper">
+            <textarea
+                aria-label="Wer sind die Kund:innen?"
+                id="customers"
+                placeholder="Wer sind die Kund:innen?
+Definieren Sie die Zielgruppe.
+Schätzen Sie die Marktgröße ab: P(opulation) x P(ercentage) x P(urchasing frequency) x P(rice)"></textarea>
+          <div aria-hidden="true" class="for-print" id="from-customers"></div>
+          <button aria-expanded="false" aria-label="Hilfe zu Kund:innen" class="help-icon" type="button">?</button>
+          <div class="help-tooltip" role="tooltip">
+            <ul>
+              <li>Wer sind die Kund:innen?</li>
+              <li>Definieren Sie die Zielgruppe.</li>
+              <li>Schätzen Sie die Marktgröße ab: P(opulation) × P(ercentage) × P(urchasing frequency) × P(rice)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section right2">
+      <h3><span aria-hidden="true" class="section-label">4.</span> Wie passt die Innovation zu Ihrem Unternehmen?</h3>
+      <div class="section-content">
+        <div class="textarea-wrapper">
+            <textarea
+                aria-label="Wie passt die Innovation zu Ihrem Unternehmen?"
+                id="fit"
+                placeholder="Wie passt diese Innovation zu Ihrer Unternehmensstrategie?
+Wie verändert diese Innovation Ihre Organisation in der Zukunft?
+Wie fügt sich diese Innovation in das Aktivitäts-Portfolio des Unternehmens ein?
+Wie können Sie Ihre Ressourcen, Ihr Wissen, Ihre Erfahrungen und Ihre Netzwerke sinnvoll nutzen?"></textarea>
+          <div aria-hidden="true" class="for-print" id="from-fit"></div>
+          <button aria-expanded="false" aria-label="Hilfe zur Unternehmenspassung" class="help-icon" type="button">?
+          </button>
+          <div class="help-tooltip" role="tooltip">
+            <ul>
+              <li>Wie passt diese Innovation zu Ihrer Unternehmensstrategie?</li>
+              <li>Wie verändert diese Innovation Ihre Organisation in der Zukunft?</li>
+              <li>Wie fügt sich diese Innovation in das Aktivitäts-Portfolio des Unternehmens ein?</li>
+              <li>Wie können Sie Ihre Ressourcen, Ihr Wissen, Ihre Erfahrungen und Ihre Netzwerke sinnvoll nutzen?</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section right3">
+      <h3><span aria-hidden="true" class="section-label">5.</span> Wie kann man damit Geld verdienen?</h3>
+      <div class="section-content">
+        <div class="textarea-wrapper">
+            <textarea
+                aria-label="Wie kann man damit Geld verdienen?"
+                id="monetization"
+                placeholder="Wie können Sie mit dieser Innovation Einnahmen erzielen?
+Wie können Sie die Innovation schützen?
+Wie können Sie verhindern, dass andere Ihnen Einnahmen mit Ihrer guten Idee machen?"></textarea>
+          <div aria-hidden="true" class="for-print" id="from-monetization"></div>
+          <button aria-expanded="false" aria-label="Hilfe zur Monetarisierung" class="help-icon" type="button">?
+          </button>
+          <div class="help-tooltip" role="tooltip">
+            <ul>
+              <li>Wie können Sie mit dieser Innovation Einnahmen erzielen?</li>
+              <li>Wie können Sie die Innovation schützen?</li>
+              <li>Wie können Sie verhindern, dass andere Ihnen Einnahmen mit Ihrer guten Idee machen?</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section full-width">
+      <h3><span aria-hidden="true" class="section-label">6.</span> Wie unterstützt die Innovation eine bessere Zukunft?
+      </h3>
+      <div class="sdgs-container">
+        <fieldset class="sdgs">
+          <legend class="visually-hidden">Welche der 17 SDGs werden durch Ihre Innovation unterstützt? Wie unterstützt
+            sie diese langfristigen Entwicklungsziele?
+          </legend>
+          <div class="sdg-item">
+            <input id="sdg1" name="sdg" type="checkbox" value="1">
+            <label for="sdg1">01 Keine Armut</label>
+          </div>
+          <div class="sdg-item">
+            <input id="sdg2" name="sdg" type="checkbox" value="2">
+            <label for="sdg2">02 Kein Hunger</label>
+          </div>
+          <div class="sdg-item">
+            <input id="sdg3" name="sdg" type="checkbox" value="3">
+            <label for="sdg3">03 Gesundheit und Wohlergehen</label>
+          </div>
+          <div class="sdg-item">
+            <input id="sdg4" name="sdg" type="checkbox" value="4">
+            <label for="sdg4">04 Hochwertige Bildung</label>
+          </div>
+          <div class="sdg-item">
+            <input id="sdg5" name="sdg" type="checkbox" value="5">
+            <label for="sdg5">05 Geschlechtergleichheit</label>
+          </div>
+          <div class="sdg-item">
+            <input id="sdg6" name="sdg" type="checkbox" value="6">
+            <label for="sdg6">06 Sauberes Wasser und Sanitäreinrichtungen</label>
+          </div>
+          <div class="sdg-item">
+            <input id="sdg7" name="sdg" type="checkbox" value="7">
+            <label for="sdg7">07 Bezahlbare und saubere Energie</label>
+          </div>
+          <div class="sdg-item">
+            <input id="sdg8" name="sdg" type="checkbox" value="8">
+            <label for="sdg8">08 Menschenwürdige Arbeit und Wirtschaftswachstum</label>
+          </div>
+          <div class="sdg-item">
+            <input id="sdg9" name="sdg" type="checkbox" value="9">
+            <label for="sdg9">09 Industrie, Innovation und Infrastruktur</label>
+          </div>
+          <div class="sdg-item">
+            <input id="sdg10" name="sdg" type="checkbox" value="10">
+            <label for="sdg10">10 Weniger Ungleichheiten</label>
+          </div>
+          <div class="sdg-item">
+            <input id="sdg11" name="sdg" type="checkbox" value="11">
+            <label for="sdg11">11 Nachhaltige Städte und Gemeinden</label>
+          </div>
+          <div class="sdg-item">
+            <input id="sdg12" name="sdg" type="checkbox" value="12">
+            <label for="sdg12">12 Nachhaltige/r Konsum und Produktion</label>
+          </div>
+          <div class="sdg-item">
+            <input id="sdg13" name="sdg" type="checkbox" value="13">
+            <label for="sdg13">13 Maßnahmen zum Klimaschutz</label>
+          </div>
+          <div class="sdg-item">
+            <input id="sdg14" name="sdg" type="checkbox" value="14">
+            <label for="sdg14">14 Leben unter Wasser</label>
+          </div>
+          <div class="sdg-item">
+            <input id="sdg15" name="sdg" type="checkbox" value="15">
+            <label for="sdg15">15 Leben an Land</label>
+          </div>
+          <div class="sdg-item">
+            <input id="sdg16" name="sdg" type="checkbox" value="16">
+            <label for="sdg16">16 Frieden, Gerechtigkeit und starke Institutionen</label>
+          </div>
+          <div class="sdg-item">
+            <input id="sdg17" name="sdg" type="checkbox" value="17">
+            <label for="sdg17">17 Partnerschaften zur Erreichung der Ziele</label>
+          </div>
+        </fieldset>
+      </div>
+    </section>
+  </main>
+
+  <footer class="main-footer">
+    <a class="website-link" href="https://www.future-flip-book.de/" rel="noopener" target="_blank">
+      www.future-flip-book.de
+    </a>
+    <br>
+    <button
+        aria-label="Alle Eingaben zurücksetzen"
+        class="styled-button"
+        onclick="resetCanvas()"
+        type="button">
+      Canvas zurücksetzen
+    </button>
+
+    <button class="styled-button" onclick="window.print()" type="button">Canvas drucken</button>
+
+    <div class="copyright">
+      Copyright © Bernd Ebersberger,
+      <a href="mailto:ebersberger@uni-hohenheim.de">ebersberger@uni-hohenheim.de</a>
+    </div>
+
+    <div class="digital-copyright">Digital implementation by
+      <a href="https://www.linkedin.com/in/fabianbeiner/" target="_blank">Fabian Beiner</a>.
+    </div>
+  </footer>
+</div>
+<script>
+  class FormHandler {
+    constructor() {
+      this.codeInputSelector = '.code-input';
+      this.storage = window.localStorage;
+      this.initialized = false;
+    }
+
+    // Initialize all event listeners and load saved data
+    init() {
+      if (this.initialized) {
+        return;
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        this.setupCodeInputMask();
+        this.loadSavedData();
+        this.setupTextareaCopy();
+      });
+
+      this.initialized = true;
+    }
+
+    // Format code input with mask XX-XX-XX
+    setupCodeInputMask() {
+      const codeInput = document.querySelector(this.codeInputSelector);
+      if (!codeInput) {
+        return;
+      }
+
+      codeInput.addEventListener('input', (e) => {
+        try {
+          const digits = e.target.value.replace(/\D/g, '');
+          const matches = digits.match(/(\d{0,2})(\d{0,2})(\d{0,2})/);
+
+          if (!matches) {
+            return;
+          }
+
+          e.target.value = matches[2]
+                           ? `${ matches[1] }-${ matches[2] }${ matches[3] ? `-${ matches[3] }` : '' }`
+                           : matches[1];
+        } catch (error) {
+          console.error('Error in code input mask:', error);
+        }
+      });
+    }
+
+    // Load all saved data from localStorage
+    loadSavedData() {
+      try {
+        this.loadTextareas();
+        this.loadCodeInput();
+        this.loadCheckboxes();
+      } catch (error) {
+        console.error('Error loading saved data:', error);
+      }
+    }
+
+    // Load and setup textareas
+    loadTextareas() {
+      const textareas = document.querySelectorAll('textarea');
+      textareas.forEach(textarea => {
+        if (!textarea.id) {
+          return;
+        }
+
+        const savedValue = this.storage.getItem(textarea.id);
+        if (savedValue) {
+          textarea.value = savedValue;
+        }
+
+        textarea.addEventListener('input', () => {
+          this.storage.setItem(textarea.id, textarea.value);
+        });
+      });
+    }
+
+    // Load and setup code input
+    loadCodeInput() {
+      const codeInput = document.querySelector(this.codeInputSelector);
+      if (!codeInput) {
+        return;
+      }
+
+      const savedCode = this.storage.getItem('inspiration-code');
+      if (savedCode) {
+        codeInput.value = savedCode;
+      }
+
+      codeInput.addEventListener('input', () => {
+        this.storage.setItem('inspiration-code', codeInput.value);
+      });
+    }
+
+    // Load and setup checkboxes
+    loadCheckboxes() {
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      checkboxes.forEach(checkbox => {
+        if (!checkbox.id) {
+          return;
+        }
+
+        const savedState = this.storage.getItem(checkbox.id);
+        if (savedState === 'true') {
+          checkbox.checked = true;
+        }
+
+        checkbox.addEventListener('change', () => {
+          this.storage.setItem(checkbox.id, checkbox.checked);
+        });
+      });
+    }
+
+    // Reset all form elements and clear storage
+    resetCanvas() {
+      if (!confirm('Wollen Sie wirklich alle Inhalte löschen?')) {
+        return;
+      }
+
+      try {
+        // Clear textareas
+        document.querySelectorAll('textarea').forEach(textarea => {
+          if (!textarea.id) {
+            return;
+          }
+          textarea.value = '';
+          this.storage.removeItem(textarea.id);
+        });
+
+        // Clear code input
+        const codeInput = document.querySelector(this.codeInputSelector);
+        if (codeInput) {
+          codeInput.value = '';
+          this.storage.removeItem('inspiration-code');
+        }
+
+        // Clear checkboxes
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+          if (!checkbox.id) {
+            return;
+          }
+          checkbox.checked = false;
+          this.storage.removeItem(checkbox.id);
+        });
+      } catch (error) {
+        console.error('Error resetting canvas:', error);
+      }
+    }
+
+    // Setup textarea copy functionality
+    setupTextareaCopy() {
+      const textareas = document.getElementsByTagName('textarea');
+      Array.from(textareas).forEach(textarea => {
+        if (!textarea.id) {
+          return;
+        }
+
+        const targetDiv = document.getElementById(`from-${ textarea.id }`);
+        if (!targetDiv) {
+          return;
+        }
+
+        const copyContent = () => {
+          targetDiv.innerHTML = textarea.value.replace(/\n/g, '<br>');
+        };
+
+        copyContent(); // Initial copy
+        textarea.addEventListener('input', copyContent);
+        textarea.addEventListener('change', copyContent);
+
+        // Handle auto-filled content
+        setTimeout(copyContent, 100);
+      });
+    }
+  }
+
+  // Initialize the form handler
+  const formHandler = new FormHandler();
+  formHandler.init();
+
+  // Expose resetCanvas function globally for HTML onclick
+  window.resetCanvas = () => formHandler.resetCanvas();
+</script>
+</body>
+</html>
